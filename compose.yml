@@ -1,0 +1,15 @@
+services:
+  app:
+    container_name: go_peregerine
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:8000"
+    volumes:
+      - .:/app
+      - /app/tmp
+    command: air -c .air.toml
+    restart: unless-stopped
