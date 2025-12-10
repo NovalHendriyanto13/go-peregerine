@@ -1,3 +1,4 @@
+// Package Home as routes
 package home
 
 import (
@@ -6,6 +7,7 @@ import (
 	"peregerine/systems/types/interfaces"
 )
 
+// HomeRoutes are the list of home routes url
 func HomeRoutes (app *fiber.App) {
 	var controller interfaces.IndexControllerInterface = api.HomeController{}
 	home := app.Group("/")

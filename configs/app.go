@@ -1,10 +1,13 @@
+// Configs application
 package configs
 
 import "os"
 
 var (
-	app_name= getEnv("APP_NAME", "")
-	app_port= getEnv("APP_PORT", "8000")
+	// AppName for main application name
+	AppName= getEnv("APP_NAME", "")
+	// AppPort for main application port
+	AppPort= getEnv("APP_PORT", "8000")
 )
 
 

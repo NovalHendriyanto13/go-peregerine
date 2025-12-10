@@ -1,3 +1,4 @@
+// routes are main routes that can register other routes
 package routes
 
 import (
@@ -6,6 +7,7 @@ import (
 	"peregerine/routes/users"
 )
 
+// RegisterRoute is function to register all routes applications
 func RegisterRoute(app *fiber.App) {
 	home.HomeRoutes(app)
 	users.UserRoutes(app)

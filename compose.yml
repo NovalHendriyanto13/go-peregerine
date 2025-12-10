@@ -7,9 +7,20 @@ services:
     env_file:
       - .env
     ports:
-      - "${APP_PORT}:8000"
+      - "${APP_PORT}:${APP_PORT}"
     volumes:
       - .:/app
       - /app/tmp
     command: air -c .air.toml
     restart: unless-stopped
+  
+  lint:
+    container_name: go_linter
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    command: golangci-lint run ./...
+    volumes:
+      - .:/app
+      - ./.golangci.yml:/app/.golangci.yml
