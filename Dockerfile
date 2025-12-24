@@ -19,6 +19,7 @@ COPY . .
 RUN mkdir -p tmp
 
 EXPOSE 8000
+EXPOSE 11434
 
 # Run Hot reload
 CMD ["air", "-c", ".air.toml"]

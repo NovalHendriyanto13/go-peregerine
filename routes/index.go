@@ -1,4 +1,4 @@
-// routes are main routes that can register other routes
+// Package routes are main routes that can register other routes
 package routes
 
 import (

@@ -1,4 +1,13 @@
 services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "${LLAMA_PORT}:${LLAMA_PORT}"
+    restart: unless-stopped
+
   app:
     container_name: go_peregerine
     build: 
@@ -11,6 +20,8 @@ services:
     volumes:
       - .:/app
       - /app/tmp
+    depends_on:
+      - ollama
     command: air -c .air.toml
     restart: unless-stopped
   
@@ -24,3 +35,6 @@ services:
     volumes:
       - .:/app
       - ./.golangci.yml:/app/.golangci.yml
+
+volumes:
+  ollama:

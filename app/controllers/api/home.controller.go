@@ -4,6 +4,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"peregerine/systems/types/responses"
+	"peregerine/systems/ai"
 )
 
 // HomeController is group of home routes action
@@ -13,10 +14,14 @@ type HomeController struct {
 
 // Index as an action from home routes to get list of data
 func (h HomeController) Index(c *fiber.Ctx) error {
-	resp := h.SuccessResponse(true, fiber.Map{
-		"message": "index",
-	})
+	// resp := h.SuccessResponse(true, fiber.Map{
+	// 	"message": "index",
+	// })
+	aiChat, _ := ai.Generate("hallo")
 
+	resp := h.SuccessResponse(true, fiber.Map{
+		"message": aiChat,
+	})
 	return c.JSON(resp)
 }
 

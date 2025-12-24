@@ -28,6 +28,10 @@ lint:
 dev:
 	$(DOCKER_COMPOSE) up --build $(APP_SERVICE)
 
+# Start dev environment (Air + auto-reload)
+up:
+	$(DOCKER_COMPOSE) up
+
 # Stop containers
 stop:
 	$(DOCKER_COMPOSE) down

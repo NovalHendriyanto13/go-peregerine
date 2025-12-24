@@ -8,6 +8,8 @@ var (
 	AppName= getEnv("APP_NAME", "")
 	// AppPort for main application port
 	AppPort= getEnv("APP_PORT", "8000")
+	// LLAMAHost for main AI Model Host
+	LLAMAHost= getEnv("LLAMA_HOST", "")
 )
 
 

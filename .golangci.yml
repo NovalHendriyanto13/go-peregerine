@@ -20,3 +20,5 @@ linters-settings:
     rules:
       - name: var-naming
         disabled: true
+      - name: package-name     # this is the one you need
+        disabled: true
