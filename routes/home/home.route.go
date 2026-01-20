@@ -13,4 +13,5 @@ func HomeRoutes (app *fiber.App) {
 	home := app.Group("/")
 
 	home.Get("/", controller.Index)
+	home.Post("/create", controller.Create)
 }

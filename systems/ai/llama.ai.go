@@ -2,6 +2,7 @@
 package ai
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 	"peregerine/configs"
 )
 
-// Function Generate is library to connect AI LLAMA client
+// Generate is library to connect AI LLAMA client
 func Generate(prompt string) (string, error) {
 	request := responses.AiRequest{
 		Model: "llama3",
@@ -25,7 +26,7 @@ func Generate(prompt string) (string, error) {
 	}
 
 	resp, err := client.Post(
-		configs.LLAMAHost,
+		configs.LLAMAHost + "/api/generate",
 		"application/json",
 		bytes.NewBuffer(jsonData),
 	)
@@ -41,4 +42,50 @@ func Generate(prompt string) (string, error) {
 	}
 
 	return result.Response, nil
+}
+
+func StreamGenerate(prompt string, out chan<- string) error {
+	request := responses.AiRequest{
+		Model: "llama3",
+		Prompt: prompt,
+		Stream: false,
+	}
+
+	jsonData, _ := json.Marshal(request)
+
+	client := &http.Client{
+		Timeout: 120 * time.Second,
+	}
+
+	resp, err := client.Post(
+		configs.LLAMAHost + "/api/generate",
+		"application/json",
+		bytes.NewBuffer(jsonData),
+	)
+
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	scanner := bufio.NewScanner(resp.Body)
+
+	for scanner.Scan() {
+		var chunk responses.AiResponse
+		line := scanner.Bytes()
+
+		if err := json.Unmarshal(line, &chunk); err != nil {
+			continue
+		}
+
+		if chunk.Response != "" {
+			out <- chunk.Response
+		}
+
+		if chunk.Done {
+			break
+		}
+	}
+
+	return nil
 }

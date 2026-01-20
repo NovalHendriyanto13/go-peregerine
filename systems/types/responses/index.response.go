@@ -3,10 +3,10 @@ package responses
 
 // BaseResponse is type of default response
 type BaseResponse struct {
-	Success bool
-	Code int
-	Data interface{}
-	Message string
+	Success bool `json:"success"`
+	Code int `json:"code"`
+	Data interface{} `json:"data"`
+	Message string `json:"message"`
 }
 
 // SuccessResponse is function for default success response

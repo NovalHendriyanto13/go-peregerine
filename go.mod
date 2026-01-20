@@ -17,4 +17,5 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	github.com/tmc/langchaingo v0.1.14 //indirect
+	github.com/redis/go-redis/v9 v9.7.0 //inderect
 )

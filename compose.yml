@@ -6,7 +6,23 @@ services:
       - ollama:/root/.ollama
     ports:
       - "${LLAMA_PORT}:${LLAMA_PORT}"
+    cpus: 4.0
+    mem_limit: 8g
     restart: unless-stopped
+
+  go_redis:
+    image: redis:latest
+    container_name: go-redis-docker
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - /systems/conf/data:/var/lib/redis
+      - /systems/conf/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DATABASES=16
 
   app:
     container_name: go_peregerine

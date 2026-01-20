@@ -1,4 +1,4 @@
-// Configs application
+// Package Configs is all main configuration of application
 package configs
 
 import "os"
@@ -10,6 +10,14 @@ var (
 	AppPort= getEnv("APP_PORT", "8000")
 	// LLAMAHost for main AI Model Host
 	LLAMAHost= getEnv("LLAMA_HOST", "")
+	// RedisHost to define host of redis
+	RedisHost= getEnv("REDIS_HOST", "")
+	// RedisPort to define port of redis
+	RedisPort= getEnv("REDIS_PORT", "6379")
+	// RedisPassword to define password credential of redis
+	RedisPassword= getEnv("REDIS_PASSWORD", "")
+	// RedisDB to define host of redis
+	RedisDB= getEnv("REDIS_DB", "0")
 )
 
 
