@@ -8,15 +8,18 @@ import (
 	// "github.com/tmc/langchaingo/llms/ollama"
 	"peregerine/routes"
 	"peregerine/configs"
+	DI "peregerine/DI"
 )
 
 func main() {
 	appPort := configs.AppPort
 	appName := configs.AppName
 	fmt.Println(appName)
+
+	c := DI.Build()
 	app := fiber.New()
 
-	routes.RegisterRoute(app)
+	routes.RegisterRoute(app, c)
 
 	log.Fatal(app.Listen(":" + appPort))
 }

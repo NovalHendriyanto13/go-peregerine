@@ -11,7 +11,7 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/ins
     | sh -s -- -b /usr/local/bin v2.7.2
 
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy
 
 COPY . .
 

@@ -1,7 +1,10 @@
 // Package Configs is all main configuration of application
 package configs
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 var (
 	// AppName for main application name
@@ -17,13 +20,22 @@ var (
 	// RedisPassword to define password credential of redis
 	RedisPassword= getEnv("REDIS_PASSWORD", "")
 	// RedisDB to define host of redis
-	RedisDB= getEnv("REDIS_DB", "0")
+	RedisDB= getEnvInt("REDIS_DB", 0)
 )
 
 
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
+	}
+	return fallback
+}
+
+func getEnvInt(key string, fallback int) int {
+	if value, ok := os.LookupEnv(key); ok {
+		if intValue, err := strconv.Atoi(value); err == nil {
+			return intValue
+		}
 	}
 	return fallback
 }

@@ -6,12 +6,12 @@ import (
 	"peregerine/configs"
 )
 
-func RedisProvider() (*redis.Client, context.Context, error) {
+func Build() (*redis.Client, context.Context, error) {
 	ctx := context.Background()
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr: configs.RedisHost + ":" + configs.RedisPort,
-		DB: configs.RedisDB
+		DB: configs.RedisDB,
 	})
 
 	if err := rdb.Ping(ctx).Err(); err != nil {
