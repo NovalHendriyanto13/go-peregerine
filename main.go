@@ -20,6 +20,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer c.Logger.Log.Sync()
+
 	app := fiber.New()
 
 	routes.RegisterRoute(app, c)

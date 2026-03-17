@@ -12,6 +12,7 @@ import (
 func UserRoutes (app *fiber.App, di *DI.DiHandler) {
 	controller := api.UserController{
 		Redis: di.Redis.RedisRepo,
+		Logger: di.Logger,
 	}
 	var userController interfaces.IndexControllerInterface = &controller
 	user := app.Group("/users")
