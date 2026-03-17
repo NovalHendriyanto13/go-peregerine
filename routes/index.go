@@ -11,5 +11,5 @@ import (
 // RegisterRoute is function to register all routes applications
 func RegisterRoute(app *fiber.App, di *DI.DiHandler) {
 	home.HomeRoutes(app)
-	users.UserRoutes(app)
+	users.UserRoutes(app, di)
 }

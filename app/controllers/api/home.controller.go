@@ -25,30 +25,6 @@ func (h HomeController) Index(c *fiber.Ctx) error {
 }
 
 // Create as an action from home routes to create data
-// func (h HomeController) Create(c *fiber.Ctx) error {
-// 	var req requests.HomeCreateRequest
-
-// 	// Parse JSON body
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"error": "invalid request body",
-// 		})
-// 	}
-
-// 	if req.Message == "" {
-// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"error": "message is required",
-// 		})
-// 	}
-// 	log.Printf("Received user: Messagedddd=%s\n", req.Message)
-// 	aiChat, _ := ai.Generate(req.Message)
-
-// 	resp := h.SuccessResponse(true, fiber.Map{
-// 		"message": aiChat,
-// 	})
-// 	return c.JSON(resp)
-// }
-
 func (h HomeController) Create(c *fiber.Ctx) error {
 	var req requests.HomeCreateRequest
 	var aiChat string

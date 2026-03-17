@@ -3,10 +3,11 @@ package redis
 import(
 	RedisRepository "peregerine/systems/services/redis/repository"
 	RedisProvider "peregerine/systems/services/redis/provider"
+	RedisType "peregerine/systems/services/redis/types"
 )
 
 type Container struct {
-	RedisRepo *RedisRepository.RedisSettingRepo
+	RedisRepo RedisType.SettingService
 }
 
 func Build() (*Container, error) {
@@ -14,7 +15,6 @@ func Build() (*Container, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	repo := RedisRepository.Build(rdb, ctx)
 
 	return &Container{ RedisRepo: repo }, nil

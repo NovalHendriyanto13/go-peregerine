@@ -34,7 +34,7 @@ func Generate(prompt string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() } ()
 
 	var result responses.AiResponse
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
@@ -66,7 +66,7 @@ func StreamGenerate(prompt string, out chan<- string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() } ()
 
 	scanner := bufio.NewScanner(resp.Body)
 

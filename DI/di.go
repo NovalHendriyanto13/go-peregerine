@@ -1,18 +1,21 @@
 package di
 
 import (
-	Redis "peregerine/systems/services/redis"
-	"github.com/redis/go-redis/v9"
+	RedisService "peregerine/systems/services/redis"
 )
 
+// DiHandler handles dependency injection for HTTP handlers.
 type DiHandler struct {
-	redis *Redis
+	Redis *RedisService.Container
 }
 
-func Build() (DiHandler, err) {
-	r := Redis.Build()
+func Build() (*DiHandler, error) {
+	r, err := RedisService.Build()
+	if err != nil {
+		return nil, err
+	}
 
 	return &DiHandler{
-		redis := r
+		Redis: r,
 	}, nil
-} 
+}

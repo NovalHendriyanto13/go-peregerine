@@ -16,7 +16,10 @@ func main() {
 	appName := configs.AppName
 	fmt.Println(appName)
 
-	c := DI.Build()
+	c, err := DI.Build()
+	if err != nil {
+		panic(err)
+	}
 	app := fiber.New()
 
 	routes.RegisterRoute(app, c)

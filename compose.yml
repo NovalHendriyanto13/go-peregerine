@@ -15,7 +15,7 @@ services:
     container_name: go-redis-docker
     restart: always
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "${REDIS_PORT}:6379"
     volumes:
       - /systems/conf/data:/var/lib/redis
       - /systems/conf/redis.conf:/usr/local/etc/redis/redis.conf

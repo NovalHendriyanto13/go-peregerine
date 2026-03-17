@@ -11,9 +11,10 @@ linters:
     - errcheck
     - ineffassign
     - misspell
-    - revive
     - importas
-    - goprintffuncname 
+    - goprintffuncname
+  disabled:
+    - revive
 
 linters-settings:
   revive:

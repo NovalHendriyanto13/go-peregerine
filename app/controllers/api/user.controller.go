@@ -4,15 +4,23 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"peregerine/systems/types/responses"
+	RedisService "peregerine/systems/services/redis/types"
 )
 
 // UserController is group of home routes action
 type UserController struct {
 	responses.BaseResponse
+	Redis RedisService.SettingService
 }
 
 // Index as an action from user routes to get list of data
 func (u UserController) Index(c *fiber.Ctx) error {
+	err := u.Redis.Set("users", "user", "test")
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
 	resp := u.SuccessResponse(true, fiber.Map{
 		"message": "user dong",
 	})
@@ -22,8 +30,10 @@ func (u UserController) Index(c *fiber.Ctx) error {
 
 // Create as an action from User routes to get list of data
 func (u UserController) Create(c *fiber.Ctx) error {
+	val, _ := u.Redis.Get("users", "user")
+
 	return c.JSON(fiber.Map{
-		"message": "Index",
+		"message": val,
 	})
 }
 
