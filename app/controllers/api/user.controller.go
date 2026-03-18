@@ -6,6 +6,7 @@ import (
 	"peregerine/systems/types/responses"
 	RedisService "peregerine/systems/services/redis/types"
 	logger "peregerine/systems/services/logger"
+	Jwt "peregerine/app/libraries"
 )
 
 // UserController is group of home routes action
@@ -60,4 +61,31 @@ func (u UserController) Remove(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "Index",
 	})
+}
+
+func (u UserController) Login(c *fiber.Ctx) error {
+	type PayloadInput struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	var payload PayloadInput
+	if err := c.BodyParser(&payload); err != nil {
+		resp := u.ErrorResponse(false, err, "Username and Password are mandatory")
+
+		return c.Status(500).JSON(resp) 
+	}
+
+	token, err := Jwt.GenerateToken(payload.Username)
+	if err != nil {
+		resp := u.ErrorResponse(false, err, "Invalid Response")
+
+		return c.Status(500).JSON(resp) 
+	}
+
+	resp := u.SuccessResponse(true, fiber.Map{
+		"token": token,
+	})
+	return c.JSON(resp)
+
 }

@@ -14,9 +14,11 @@ func UserRoutes (app *fiber.App, di *DI.DiHandler) {
 		Redis: di.Redis.RedisRepo,
 		Logger: di.Logger,
 	}
-	var userController interfaces.IndexControllerInterface = &controller
+	var baseUserController interfaces.IndexControllerInterface = &controller
+	var userController = &controller
 	user := app.Group("/users")
 
-	user.Get("/", userController.Index)
-	user.Post("/create", userController.Create)
+	user.Get("/", baseUserController.Index)
+	user.Post("/create", baseUserController.Create)
+	user.Post("/login", userController.Login)
 }

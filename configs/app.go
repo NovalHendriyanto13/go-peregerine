@@ -20,9 +20,10 @@ var (
 	// RedisPassword to define password credential of redis
 	RedisPassword= getEnv("REDIS_PASSWORD", "")
 	// RedisDB to define host of redis
-	RedisDB= getEnvInt("REDIS_DB", 0)
+	RedisDB = getEnvInt("REDIS_DB", 0)
+	JWTSecret = getEnvByte("JWT_SECRET", []byte{})
+	JWTTTL = getEnvInt("JWT_TTL", 15)
 )
-
 
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -38,4 +39,8 @@ func getEnvInt(key string, fallback int) int {
 		}
 	}
 	return fallback
+}
+
+func getEnvByte(key string, fallback []byte) []byte {
+	return []byte(getEnv(key, string(fallback)))
 }
