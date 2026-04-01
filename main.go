@@ -9,6 +9,7 @@ import (
 	"peregerine/routes"
 	"peregerine/configs"
 	DI "peregerine/DI"
+	CoreSecurity "peregerine/systems/middlewares"
 )
 
 func main() {
@@ -23,6 +24,8 @@ func main() {
 	defer c.Logger.Log.Sync()
 
 	app := fiber.New()
+
+	CoreSecurity.CoreSecurity(app)
 
 	routes.RegisterRoute(app, c)
 

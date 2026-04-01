@@ -7,6 +7,7 @@ import (
 	"peregerine/systems/types/responses"
 	"peregerine/systems/ai"
 	"peregerine/app/requests"
+	AppLibrary "peregerine/app/libraries"
 )
 
 // HomeController is group of home routes action
@@ -64,8 +65,10 @@ func (h HomeController) Create(c *fiber.Ctx) error {
 
 // Detail as an action from home routes to specific data filtered by PK ID
 func (h HomeController) Detail(c *fiber.Ctx) error {
+	authUser := AppLibrary.GetAuthUser(c)
 	return c.JSON(fiber.Map{
 		"message": "Index",
+		"data": authUser,
 	})
 }
 

@@ -84,7 +84,7 @@ func (u UserController) Login(c *fiber.Ctx) error {
 	}
 
 	resp := u.SuccessResponse(true, fiber.Map{
-		"token": token,
+		"token": token.AccessToken,
 	})
 	return c.JSON(resp)
 

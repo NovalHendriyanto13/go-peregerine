@@ -2,6 +2,7 @@ package libraries
 
 import(
 	"time"
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"peregerine/configs"
@@ -43,4 +44,8 @@ func GenerateToken(userID string) (*Token, error) {
 		AccessToken: accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func GetAuthUser(c *fiber.Ctx) jwt.MapClaims {
+	return c.Locals("auth_user").(jwt.MapClaims)
 }
