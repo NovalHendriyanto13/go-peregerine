@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"peregerine/routes/home"
 	"peregerine/routes/users"
+	"peregerine/routes/upload"
 	DI "peregerine/DI"
 )
 
@@ -12,4 +13,5 @@ import (
 func RegisterRoute(app *fiber.App, di *DI.DiHandler) {
 	home.HomeRoutes(app)
 	users.UserRoutes(app, di)
+	upload.UploadRoutes(app, di)
 }
