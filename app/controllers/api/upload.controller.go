@@ -31,7 +31,11 @@ func (u UploadController) Create(c *fiber.Ctx) error {
 	ext := filepath.Ext(file.Filename)
 
 	path := "./storage/public/resumes/" + filename + ext
-	c.SaveFile(file, path)
+	if err := c.SaveFile(file, path); err != nil {
+		resp := u.ErrorResponse(false, err, "There an error when uploading file")
+
+		return c.Status(500).JSON(resp)
+	}
 
 	readText, err := libraries.ReadPdfToText(path)
 	if err != nil {
