@@ -6,11 +6,13 @@ import (
 	"peregerine/app/libraries"
 	"path/filepath"
 	RedisService "peregerine/systems/services/redis/types"
+	QueueService "peregerine/systems/services/queue/types"
 )
 
 type UploadController struct {
 	responses.BaseResponse
 	Redis RedisService.SettingService
+	Queue QueueService.QueueMethod
 }
 
 func (u UploadController) Index(c *fiber.Ctx) error {
@@ -43,6 +45,10 @@ func (u UploadController) Create(c *fiber.Ctx) error {
 
 		return c.Status(500).JSON(resp)
 	}
+
+	u.Queue.SetQueue("testing", fiber.Map{
+		"testing": file.Filename,
+	})
 
 	resp := u.SuccessResponse(true, fiber.Map{
 		"orignal": file.Filename,

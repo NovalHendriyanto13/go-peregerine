@@ -1,4 +1,4 @@
-package redisprovider
+package RedisProvider
 
 import (
 	"context"

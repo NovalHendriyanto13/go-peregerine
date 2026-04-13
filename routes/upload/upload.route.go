@@ -11,6 +11,7 @@ import (
 func UploadRoutes (app *fiber.App, di *DI.DiHandler) {
 	controller := api.UploadController{
 		Redis: di.Redis.RedisRepo,
+		Queue: di.Queue.QueueRepo,
 	}
 
 	var baseUserController interfaces.IndexControllerInterface = &controller
