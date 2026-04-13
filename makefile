@@ -55,6 +55,8 @@ sh:
 sh-lint:
 	docker compose run --rm $(LINTER_SERVICE) golangci-lint run
 
+worker-run:
+	docker exec -it $(APP_NAME) sh && go run jobs/main.job.go
 
 ## ---------------------------
 ## CLEANUP

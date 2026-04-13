@@ -16,12 +16,15 @@ func main() {
 
 	mux := asynq.NewServeMux()
 
+	// List of init worker for the jobs
 	ResumeHandler := resume.NewResumeHandler()
-	mux.HandleFunc(resume.TaskName, ResumeHandler.Process) // ini di ambil di folder jobs method nya
+
+	// List of Handle Function of worker jobs
+	mux.HandleFunc(resume.TaskName, ResumeHandler.Process)
 
 	log.Println("🚀 Worker started...")
 	if err := server.Qs.Server.Run(mux); err != nil {
-		// di.Logger.Logger.Log.info(err)
+		di.Logger.Log.Info(err.Error())
 		log.Println(err)
 	}
 }

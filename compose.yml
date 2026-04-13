@@ -52,5 +52,12 @@ services:
       - .:/app
       - ./.golangci.yml:/app/.golangci.yml
 
+  worker:
+    container_name: go_peregerine_worker
+    build: .
+    command: go run app/jobs/main.job.go
+    depends_on:
+      - go_redis    
+
 volumes:
   ollama:

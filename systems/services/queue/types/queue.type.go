@@ -17,7 +17,7 @@ type QueueServeMux struct {
 }
 
 type QueueMethod interface {
-	SetQueue(taskName string, payload interface{}) error
+	SetQueue(taskName string, payload interface{}, opts ...asynq.Option) error
 }
 
 type QueueExecuteMethod interface {

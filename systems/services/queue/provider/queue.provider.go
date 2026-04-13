@@ -19,6 +19,7 @@ func Build() (*QueueType.QueueClient, error) {
 
 func BuildServer(cfg configs.WorkerConfig) (*QueueType.QueueServer) {
 	redisAddr := configs.RedisHost + ":" + configs.RedisPort
+	
 	serv := &QueueType.QueueServer{
 		Server: asynq.NewServer(
 			asynq.RedisClientOpt { Addr: redisAddr },
