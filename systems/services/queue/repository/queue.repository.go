@@ -19,6 +19,7 @@ func (a *QueueRepo) SetQueue(taskName string, payload interface{}, opts ...asynq
 	data, _ := json.Marshal(payload)
 
 	defaultOption := []asynq.Option{
+		asynq.Queue("default"),
 		asynq.MaxRetry(3),
 		asynq.Timeout(30 * time.Second),
 		asynq.Retention(24 * time.Hour),
