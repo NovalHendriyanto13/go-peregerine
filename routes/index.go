@@ -7,11 +7,16 @@ import (
 	"peregerine/routes/users"
 	"peregerine/routes/upload"
 	DI "peregerine/DI"
+	AppMiddleware "peregerine/app/middlewares"
 )
 
 // RegisterRoute is function to register all routes applications
 func RegisterRoute(app *fiber.App, di *DI.DiHandler) {
-	home.HomeRoutes(app)
+	app.Group("/", AppMiddleware.AppKey())
+	
 	users.UserRoutes(app, di)
+	
+	home.HomeRoutes(app)
 	upload.UploadRoutes(app, di)
+	
 }

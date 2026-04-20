@@ -32,14 +32,36 @@ func JwtProtected() fiber.Handler{
 		})
 
 		if err != nil || !token.Valid {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"message": "Invalid or expired token",
-			})
+			return c.Status(fiber.StatusUnauthorized).JSON(
+				resp.ErrorResponse(false, nil, "Invalid or expired token"),
+			)
 		}
 
 		// Save user info into context (optional)
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			c.Locals("auth_user", claims)
+		}
+
+		return c.Next()
+	}
+}
+
+func AppKey() fiber.Handler {
+	return func(c *fiber.Ctx) error{
+		var resp responses.BaseResponse
+
+		appKeyHeader := c.Get("x-app-key")
+		
+		if appKeyHeader == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(
+				resp.ErrorResponse(false, nil, "Invalid request header"),
+			)
+		}
+
+		if appKeyHeader != configs.XAppKey {
+			return c.Status(fiber.StatusBadRequest).JSON(
+				resp.ErrorResponse(false, nil, "Invalid request header"),
+			)
 		}
 
 		return c.Next()

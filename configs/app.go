@@ -23,6 +23,7 @@ var (
 	RedisDB = getEnvInt("REDIS_DB", 0)
 	JWTSecret = getEnvByte("JWT_SECRET", []byte{})
 	JWTTTL = getEnvInt("JWT_TTL", 15)
+	XAppKey = getEnv("X_APP_KEY", "")
 )
 
 func getEnv(key, fallback string) string {
