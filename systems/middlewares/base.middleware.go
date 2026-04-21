@@ -8,13 +8,22 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/timeout"
+	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 )
 
 func CoreSecurity (app *fiber.App) {
-	app.Use(recover.New())
+	// FIX: Recover from panics — always first
+	app.Use(recover.New(recover.Config{
+		EnableStackTrace: true,
+	}))
 
-	app.Use(logger.New())
+	// FIX: Add request ID to every request for tracing
+	app.Use(requestid.New())
+
+	app.Use(logger.New(logger.Config{
+		Format: "[${time}] ${status} - ${latency} ${method} ${path} id=${locals:requestid}\n",
+	}))
 
 	app.Use(helmet.New())
 
@@ -26,10 +35,22 @@ func CoreSecurity (app *fiber.App) {
 	app.Use(limiter.New(limiter.Config{
 		Max: 100,
 		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			// Rate-limit per IP address
+			return c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+				"success": false,
+				"code":    fiber.StatusTooManyRequests,
+				"message": "Too many requests, please slow down",
+				"data":    fiber.Map{},
+			})
+		},
 	}))
 
-	// Timeout protection
-	app.Use(timeout.NewWithContext(func(c *fiber.Ctx) error {
-		return c.Next()
-	}, 5*time.Second))
+	// FIX: Add gzip/deflate response compression
+	app.Use(compress.New(compress.Config{
+		Level: compress.LevelBestSpeed,
+	}))
 }

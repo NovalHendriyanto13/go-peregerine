@@ -46,15 +46,22 @@ func (h HomeController) Create(c *fiber.Ctx) error {
 	c.Set("Content-Type", "text/plain; charset=utf-8")
 	c.Set("Transfer-Encoding", "chunked")
 
-	ch := make(chan string)
+	// ch := make(chan string)
 
-	go func() {
-		_ = ai.StreamGenerate(req.Message, ch)
-		close(ch)
-	}()
+	// go func() {
+	// 	_ = ai.StreamGenerate(req.Message, ch)
+	// 	close(ch)
+	// }()
 
-	for token := range ch {
-		aiChat += token
+	// for token := range ch {
+	// 	aiChat += token
+	// }
+
+	aiChat, err := ai.Generate(req.Message)
+	if err != nil {
+		return c.Status(fiber.StatusServiceUnavailable).JSON(
+			h.ErrorResponse(false, err, "AI service unavailable"),
+		)
 	}
 
 	resp := h.SuccessResponse(true, fiber.Map{
@@ -65,7 +72,12 @@ func (h HomeController) Create(c *fiber.Ctx) error {
 
 // Detail as an action from home routes to specific data filtered by PK ID
 func (h HomeController) Detail(c *fiber.Ctx) error {
-	authUser := AppLibrary.GetAuthUser(c)
+	authUser, err := AppLibrary.GetAuthUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(
+			h.ErrorResponse(false, err, "Unauthorized"),
+		)
+	}
 	return c.JSON(fiber.Map{
 		"message": "Index",
 		"data": authUser,

@@ -2,9 +2,10 @@ package libraries
 
 import (
 	"github.com/google/uuid"
-	"math/rand"
+	"crypto/rand"
 	"bytes"
 	"github.com/ledongthuc/pdf"
+	"encoding/base64"
 )
 
 func GenerateUUID() (string, error) {
@@ -18,8 +19,9 @@ func GenerateUUID() (string, error) {
 func RandomString(n int) (string) {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	b := make([]byte, n)
+	_, _ = rand.Read(b)
 	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+		b[i] = charset[int(b[i])%len(charset)]
 	}
 	return string(b)
 }
@@ -46,4 +48,10 @@ func ReadPdfToText(path string) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func RandomStringB64(n int) string {
+	b := make([]byte, n)
+	_, _ = rand.Read(b)
+	return base64.RawURLEncoding.EncodeToString(b)[:n]
 }

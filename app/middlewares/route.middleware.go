@@ -2,6 +2,7 @@ package middlewares
 
 import(
 	"strings"
+	"crypto/subtle"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gofiber/fiber/v2"
 	"peregerine/systems/types/responses"
@@ -21,13 +22,17 @@ func JwtProtected() fiber.Handler{
 		}
 
 		tokenString := strings.Split(authHeader, " ")
-		if len(tokenString) != 2 {
+		if len(tokenString) != 2 || tokenString[0] != "Bearer" {
 			return c.Status(fiber.StatusUnauthorized).JSON(
-				resp.ErrorResponse(false, nil, "Authorization is required"),
+				resp.ErrorResponse(false, nil, "Authorization must be Bearer token"),
 			)
 		}
 
 		token, err := jwt.Parse(tokenString[1], func(t *jwt.Token) (interface{}, error) {
+			// FIX: Validate signing method — prevents alg:none attacks
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fiber.ErrUnauthorized
+			}
 			return configs.JWTSecret, nil
 		})
 
@@ -58,7 +63,7 @@ func AppKey() fiber.Handler {
 			)
 		}
 
-		if appKeyHeader != configs.XAppKey {
+		if subtle.ConstantTimeCompare([]byte(appKeyHeader), []byte(configs.XAppKey)) != 1 {
 			return c.Status(fiber.StatusBadRequest).JSON(
 				resp.ErrorResponse(false, nil, "Invalid request header"),
 			)

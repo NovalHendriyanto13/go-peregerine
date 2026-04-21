@@ -11,6 +11,15 @@ import (
 	"peregerine/configs"
 )
 
+var client = &http.Client{
+    Timeout: 120 * time.Second,
+    Transport: &http.Transport{
+        MaxIdleConns:        100,
+        MaxIdleConnsPerHost: 100,
+        IdleConnTimeout:     90 * time.Second,
+    },
+}
+
 // Generate is library to connect AI LLAMA client
 func Generate(prompt string) (string, error) {
 	request := responses.AiRequest{
@@ -21,9 +30,9 @@ func Generate(prompt string) (string, error) {
 
 	jsonData, _ := json.Marshal(request)
 
-	client := &http.Client{
-		Timeout: 120 * time.Second,
-	}
+	// client := &http.Client{
+	// 	Timeout: 120 * time.Second,
+	// }
 
 	resp, err := client.Post(
 		configs.LLAMAHost + "/api/generate",
@@ -53,9 +62,9 @@ func StreamGenerate(prompt string, out chan<- string) error {
 
 	jsonData, _ := json.Marshal(request)
 
-	client := &http.Client{
-		Timeout: 120 * time.Second,
-	}
+	// client := &http.Client{
+	// 	Timeout: 120 * time.Second,
+	// }
 
 	resp, err := client.Post(
 		configs.LLAMAHost + "/api/generate",
