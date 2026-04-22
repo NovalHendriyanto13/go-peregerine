@@ -1,0 +1,25 @@
+version: 2
+
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - unused
+    - errcheck
+    - ineffassign
+    - misspell
+    - importas
+    - goprintffuncname
+  disabled:
+    - revive
+
+linters-settings:
+  revive:
+    rules:
+      - name: var-naming
+        disabled: true
+      - name: package-name     # this is the one you need
+        disabled: true

@@ -1,0 +1,63 @@
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "${LLAMA_PORT}:${LLAMA_PORT}"
+    cpus: 4.0
+    mem_limit: 8g
+    restart: unless-stopped
+
+  go_redis:
+    image: redis:latest
+    container_name: go-redis-docker
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - /systems/conf/data:/var/lib/redis
+      - /systems/conf/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DATABASES=16
+
+  app:
+    container_name: go_peregerine
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app
+      - /app/tmp
+    depends_on:
+      - ollama
+    command: air -c .air.toml
+    restart: unless-stopped
+  
+  lint:
+    container_name: go_linter
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    command: golangci-lint run ./...
+    volumes:
+      - .:/app
+      - ./.golangci.yml:/app/.golangci.yml
+
+  worker:
+    container_name: go_peregerine_worker
+    build: .
+    command: go run app/jobs/main.job.go
+    depends_on:
+      - go_redis    
+
+volumes:
+  ollama:
