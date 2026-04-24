@@ -6,6 +6,7 @@ import (
 	"peregerine/routes/home"
 	"peregerine/routes/users"
 	"peregerine/routes/upload"
+	"peregerine/routes/scrape"
 	DI "peregerine/DI"
 	AppMiddleware "peregerine/app/middlewares"
 )
@@ -18,5 +19,5 @@ func RegisterRoute(app *fiber.App, di *DI.DiHandler) {
 	
 	home.HomeRoutes(app)
 	upload.UploadRoutes(app, di)
-	
+	scrape.ScrapeRoute(app, di)
 }
