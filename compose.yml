@@ -38,6 +38,7 @@ services:
       - /app/tmp
     depends_on:
       - ollama
+      - chrome
     command: air -c .air.toml
     restart: unless-stopped
   
@@ -57,7 +58,15 @@ services:
     build: .
     command: go run app/jobs/main.job.go
     depends_on:
-      - go_redis    
+      - go_redis
+
+  chrome:
+    image: browserless/chrome:latest
+    ports:
+      - "9222:3000"
+    environment:
+      - MAX_CONCURRENT_SESSIONS=10
+      - CONNECTION_TIMEOUT=60000 
 
 volumes:
   ollama:

@@ -26,7 +26,7 @@ lint:
 
 # Start dev environment (Air + auto-reload)
 dev:
-	$(DOCKER_COMPOSE) up --build $(APP_SERVICE)
+	$(DOCKER_COMPOSE) up --build
 
 # Start dev environment (Air + auto-reload)
 up:

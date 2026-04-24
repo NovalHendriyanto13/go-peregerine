@@ -24,6 +24,7 @@ var (
 	JWTSecret = getEnvByte("JWT_SECRET", []byte{})
 	JWTTTL = getEnvInt("JWT_TTL", 15)
 	XAppKey = getEnv("X_APP_KEY", "")
+	ChromeUrl = getEnv("CHROME_URL", "")
 )
 
 func getEnv(key, fallback string) string {
