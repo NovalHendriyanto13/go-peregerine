@@ -33,11 +33,15 @@ func (s ScrapeController) Index(c *fiber.Ctx) error {
 	page.MustWaitLoad()
 
 	title := page.MustInfo().Title
+	wait := page.MustWaitNavigation()
+
 	page.MustElement(`flt-semantics[arial-label="Login With Microsoft"]`).
 		MustClick()
 
-	page.MustWaitNavigation()
+	
 	fmt.Println("Redirect to: ", page.MustInfo().URL)
+	
+	wait()
 
 	page.MustWaitLoad()
 	

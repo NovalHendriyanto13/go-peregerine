@@ -17,7 +17,10 @@ func RegisterRoute(app *fiber.App, di *DI.DiHandler) {
 	
 	users.UserRoutes(app, di)
 	
+	scrape.ScrapeRoute(app, di)
+
+	// The group of routes that need JWT token to access them
 	home.HomeRoutes(app)
 	upload.UploadRoutes(app, di)
-	scrape.ScrapeRoute(app, di)
+	
 }
