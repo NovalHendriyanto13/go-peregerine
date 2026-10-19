@@ -1,6 +1,7 @@
 package QueueType
 
 import (
+	"context"
 	"github.com/hibiken/asynq"
 )
 
@@ -17,7 +18,7 @@ type QueueServeMux struct {
 }
 
 type QueueMethod interface {
-	SetQueue(taskName string, payload interface{}, opts ...asynq.Option) error
+	SetQueue(ctx context.Context, taskName string, payload interface{}, opts ...asynq.Option) error
 }
 
 type QueueExecuteMethod interface {

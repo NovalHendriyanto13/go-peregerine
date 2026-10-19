@@ -2,8 +2,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 	"github.com/gofiber/fiber/v2"
 	// "github.com/tmc/langchaingo/llms/ollama"
 	"peregerine/routes"
@@ -21,7 +26,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer c.Logger.Log.Sync()
+	defer c.Close()
 
 	app := fiber.New(fiber.Config{
 		// Limit request body to 10MB — prevents memory exhaustion from large payloads
@@ -45,5 +50,22 @@ func main() {
 
 	routes.RegisterRoute(app, c)
 
-	log.Fatal(app.Listen(":" + appPort))
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	serverErr := make(chan error, 1)
+	go func() {
+		serverErr <- app.Listen(":" + appPort)
+	}()
+
+	select {
+	case err := <-serverErr:
+		log.Println(err)
+	case <-ctx.Done():
+		log.Println("Shutting down server...")
+		// Stop accepting new requests and wait for in-flight ones before closing Redis/queue
+		if err := app.ShutdownWithTimeout(10 * time.Second); err != nil {
+			log.Println(err)
+		}
+	}
 }

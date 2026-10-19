@@ -1,6 +1,7 @@
 package QueueRepository
 
 import (
+	"context"
 	"time"
 	"encoding/json"
 	"github.com/hibiken/asynq"
@@ -15,8 +16,11 @@ func Build(q *QueueType.QueueClient) QueueType.QueueMethod {
 	return &QueueRepo{ client: q }
 }
 
-func (a *QueueRepo) SetQueue(taskName string, payload interface{}, opts ...asynq.Option) error {
-	data, _ := json.Marshal(payload)
+func (a *QueueRepo) SetQueue(ctx context.Context, taskName string, payload interface{}, opts ...asynq.Option) error {
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
 
 	defaultOption := []asynq.Option{
 		asynq.Queue("default"),
@@ -29,7 +33,7 @@ func (a *QueueRepo) SetQueue(taskName string, payload interface{}, opts ...asynq
 
 	task := asynq.NewTask(taskName, data)
 
-	_, err := a.client.Client.Enqueue(task, opts...)
+	_, err = a.client.Client.EnqueueContext(ctx, task, opts...)
 	return err
 }
 

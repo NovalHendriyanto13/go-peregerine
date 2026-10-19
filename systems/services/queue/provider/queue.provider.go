@@ -6,23 +6,26 @@ import (
 	QueueType "peregerine/systems/services/queue/types"
 )
 
+func redisOpt() asynq.RedisClientOpt {
+	return asynq.RedisClientOpt{
+		Addr: configs.RedisHost + ":" + configs.RedisPort,
+		Password: configs.RedisPassword,
+		DB: configs.RedisDB,
+	}
+}
+
 func Build() (*QueueType.QueueClient, error) {
-	redisAddr := configs.RedisHost + ":" + configs.RedisPort
 	client := &QueueType.QueueClient{
-		Client: asynq.NewClient(asynq.RedisClientOpt {
-			Addr: redisAddr,
-		}),
+		Client: asynq.NewClient(redisOpt()),
 	}
 
 	return client, nil
 }
 
 func BuildServer(cfg configs.WorkerConfig) (*QueueType.QueueServer) {
-	redisAddr := configs.RedisHost + ":" + configs.RedisPort
-	
 	serv := &QueueType.QueueServer{
 		Server: asynq.NewServer(
-			asynq.RedisClientOpt { Addr: redisAddr },
+			redisOpt(),
 			asynq.Config{
 				Concurrency: cfg.Concurrency,
 				Queues: cfg.Queues,

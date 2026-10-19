@@ -18,7 +18,7 @@ type UserController struct {
 
 // Index as an action from user routes to get list of data
 func (u UserController) Index(c *fiber.Ctx) error {
-	err := u.Redis.Set("users", "user", "test")
+	err := u.Redis.Set(c.UserContext(), "users", "user", "test")
 	if err != nil {
 		resp := u.ErrorResponse(false, err, "Redis is not available")
 
@@ -35,7 +35,7 @@ func (u UserController) Index(c *fiber.Ctx) error {
 
 // Create as an action from User routes to get list of data
 func (u UserController) Create(c *fiber.Ctx) error {
-	val, _ := u.Redis.Get("users", "user")
+	val, _ := u.Redis.Get(c.UserContext(), "users", "user")
 
 	return c.JSON(fiber.Map{
 		"message": val,

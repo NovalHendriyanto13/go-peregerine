@@ -1,9 +1,15 @@
 package RedisType
 
-type SettingService interface {
-	Set(group, key, value string) error
-	Get(key, value string) (string, error)
-	GetAll(group string) (map[string] string, error)
-}
+import (
+	"context"
+	"errors"
+)
 
-// type RedisHandler 
+// ErrNotFound is returned when the requested key does not exist
+var ErrNotFound = errors.New("redis: key not found")
+
+type SettingService interface {
+	Set(ctx context.Context, group, key, value string) error
+	Get(ctx context.Context, key, value string) (string, error)
+	GetAll(ctx context.Context, group string) (map[string] string, error)
+}

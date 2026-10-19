@@ -9,6 +9,7 @@ import (
 
 type Container struct {
 	QueueRepo QueueClient.QueueMethod
+	client *QueueClient.QueueClient
 }
 
 type ContainerServer struct {
@@ -22,7 +23,12 @@ func Build() (*Container, error) {
 	}
 	repo := QueueRepo.Build(q)
 	
-	return &Container{ QueueRepo: repo }, nil
+	return &Container{ QueueRepo: repo, client: q }, nil
+}
+
+// Close releases the queue client connection
+func (c *Container) Close() error {
+	return c.client.Client.Close()
 }
 
 func BuildServer(cfg configs.WorkerConfig) (*ContainerServer) {
